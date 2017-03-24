@@ -3,11 +3,15 @@ var w = document.documentElement.clientWidth;
 var canvas = document.querySelector('canvas');
 var ctx    = canvas.getContext('2d');
 
-canvas.width = w;
-canvas.height = h;
+var pxRatio = window.devicePixelRatio;
 
-var W      = canvas.width * window.devicePixelRatio;
-var H      = canvas.height * window.devicePixelRatio;
+var W = w * pxRatio;
+var H = h * pxRatio;
+
+canvas.width        = W;
+canvas.height       = H;
+canvas.style.width  = w + 'px';
+canvas.style.height = h + 'px';
 
 ctx.translate(W / 2, H / 2);
 
@@ -16,7 +20,7 @@ var idMap = data.nodes.reduce(function (acc, node, i) {
   acc[node.id] = i;
   return acc;
 }, {});
-var Rmax = 5;
+var Rmax = 5 * pxRatio;
 var bounds = [-W / 2 + Rmax, -H / 2 + Rmax, W / 2 - Rmax, H / 2 - Rmax];
 
 // gonna be randomized anyway, that's just for the demo
@@ -111,8 +115,8 @@ var dragTimer   = 0;
 
 canvas.addEventListener('mousedown', function (evt) {
   dragging = true;
-  var ex = bounds[0] + evt.clientX,
-      ey = bounds[1] + evt.clientY;
+  var ex = bounds[0] + evt.clientX * pxRatio,
+      ey = bounds[1] + evt.clientY * pxRatio;
 
   setTimeout(function () {
     for (var i = 0, len = data.nodes.length; i < len; i++) {
@@ -130,8 +134,8 @@ canvas.addEventListener('mousedown', function (evt) {
 
 canvas.addEventListener('mousemove', function (evt) {
   if (dragging && draggedNode) {
-    draggedNode.x = bounds[0] + evt.clientX;
-    draggedNode.y = bounds[1] + evt.clientY;
+    draggedNode.x = bounds[0] + evt.clientX * pxRatio;
+    draggedNode.y = bounds[1] + evt.clientY * pxRatio;
 
     clearTimeout(dragTimer);
     dragTimer = setTimeout(render, 16);

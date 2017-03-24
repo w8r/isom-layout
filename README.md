@@ -68,12 +68,14 @@ Basically, it
 
 ## Notes
 
-My impression - useless. You can endlessly tweak the parametres, but it doesn't
-give you a nice comprehensible layout. So this it a mere exercise in understanding
-the parameters and nature of the algorithms like that.
+My impression - useless. The only thing it shows more or less is the nodes with
+highest degrees. Maybe it can be good on simple chains. You can endlessly tweak
+the parametres, but it doesn't give you a nice comprehensible layout. So this a
+mere exercise in understanding the parameters and nature of the algorithms like
+this one.
 
-Also funny observation: it works as if an impatient person was untangling a threadball
-by randomly pulling the outstanding knots and strings.
+Also funny observation: it works as if an impatient person was untangling a
+threadball by randomly pulling the outstanding knots and strings.
 
 ## License
 
