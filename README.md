@@ -1,10 +1,14 @@
-# Self-Organizing maps layout - SOM
+# Self-Organizing maps layout - SOM [![npm version](https://badge.fury.io/js/isom-layout.svg)](https://badge.fury.io/js/isom-layout)
 
 ![Thumb](https://w8r.github.io/isom-layout/demo/thumbnail.png)
 
 After [Self-Organizing Graphs: A Neural Network Perspective of Graph Layout](https://pdfs.semanticscholar.org/a0e4/2f00c86df822d2caa0796b2b04d63c6ec96b.pdf) by Bernd Meyer.
 
 ## Usage
+
+```
+npm install `isom-layout`;
+```
 
 ```js
 import som from 'isom-layout';
