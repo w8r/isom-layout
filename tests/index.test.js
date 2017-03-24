@@ -1,15 +1,13 @@
 import { describe, it } from 'mocha';
 import { assert }       from 'chai';
 
-import lib from '../src/index';
+import som from '../src/index';
 
-console.log(lib);
+describe('som', () => {
 
-
-describe('lib', () => {
-
-  it ('should work', () => {
-    assert.equal(1, 1);
+  it ('should be exposed', () => {
+    assert.isFunction(som);
+    assert.isFunction(som.randomize);
   });
 
 });

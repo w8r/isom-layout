@@ -1,11 +1,11 @@
 {
-  "name": "rollup-buble-mocha-boilerplate",
+  "name": "isom-layout",
   "version": "1.0.0",
   "author": "Alexander Milevski <info@w8r.name>",
   "license": "MIT",
-  "description": "Rollup + Buble + Mocha",
-  "main": "dist/lib.umd.js",
-  "jsnext:main": "dist/lib.es6.js",
+  "description": "ISOM graph layout (Self-Organizing Maps)",
+  "main": "dist/som.js",
+  "jsnext:main": "dist/som.es6.js",
   "scripts": {
     "prebuild": "npm run lint",
     "lint": "eslint src",

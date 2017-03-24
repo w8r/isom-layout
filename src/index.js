@@ -17,10 +17,11 @@ export default function som (data, {
   radius                  = 3,
   coolingFactor           = 2,
   iterationsPerRadiusStep = 70,
-  iterationsPerUpdate     = 10,
+  iterationsPerUpdate     = 100,
   onUpdate                = () => {},
   onEnd                   = () => {},
-  map, bounds
+  updateDelay             = 0,
+  map, bounds, dontRandomize
 }) {
 
   if (!map) {
@@ -50,20 +51,21 @@ export default function som (data, {
   const minAdaption   = 0.15;
 
   function update (data, map, bounds) {
-    let { nodes, edges } = data;
+    const { nodes, edges } = data;
     // Generate random position in graph space
-    let tmp = {
+    const tmp = {
       x: bounds[0] + Math.random() * (bounds[2] - bounds[0]),
       y: bounds[1] + Math.random() * (bounds[3] - bounds[1])
     };
 
     // Get closest vertex to random position
-    let winner, dist = Infinity;
+    let winner;
+    let dist = Infinity;
     for (let i = 0, len = nodes.length; i < len; i++) {
       let node = nodes[i];
-      let dx = tmp.x - node.x;
-      let dy = tmp.y - node.y;
-      let localSqDist = dx * dx + dy * dy;
+      const dx = tmp.x - node.x;
+      const dy = tmp.y - node.y;
+      const localSqDist = dx * dx + dy * dy;
       if (localSqDist < dist) {
         dist   = localSqDist;
         winner = node;
@@ -71,12 +73,13 @@ export default function som (data, {
     }
 
     // relax positions
-    let queue = [[winner, 1]], visited = {};
+    let queue = [[winner, 1]];
+    let visited = {};
 
     while (queue.length) {
-      let [w, dist] = queue.pop();
+      const [w, dist] = queue.pop();
 
-      let f = currAdaption / Math.pow(2, dist);
+      const f = currAdaption / Math.pow(2, dist);
 
       w.x = w.x - f * (w.x - tmp.x);
       w.y = w.y - f * (w.y - tmp.y);
@@ -84,10 +87,10 @@ export default function som (data, {
       // enqueue neighbours
       if (dist <= radius) {
         for (let i = 0, len = edges.length; i < len; i++) {
-          let edge = edges[i];
-          let nb   = (edge.source === w.id) ?
-            nodes[map[edge.target]] :
-            (edge.target === w.id) ? nodes[map[edge.source]] : null;
+          const edge = edges[i];
+          let nb     = null;
+          if      (edge.source === w.id) nb = nodes[map[edge.target]];
+          else if (edge.target === w.id) nb = nodes[map[edge.source]];
           if (nb && !visited[nb.id]) {
             queue.push([nb, dist + 1]);
             visited[nb.id] = true;
@@ -102,15 +105,14 @@ export default function som (data, {
     update(data, map, bounds);
     const factor = Math.exp(-1 * coolingFactor * (t / maxIterations));
     currAdaption = Math.max(minAdaption, factor * adaption);
-    if (currAdaption === minAdaption) {
-      console.log('cool down', radius);
+    if (currAdaption === minAdaption) { // last step of cool down
       minRadius = 0;
     }
     if (radius > minRadius && t % iterationsPerRadiusStep === 0) radius--;
   }
 
-  randomize(data, bounds);
-  let iter = 0;
+  if (!dontRandomize) randomize(data, bounds);
+
   let timer = setInterval(() => {
     while (t < maxIterations) {
       step();
@@ -124,8 +126,7 @@ export default function som (data, {
       onUpdate();
       onEnd();
     }
-  }, 10)
-  //while (!done() && iter < 1000) step();
+  }, updateDelay);
 }
 
 som.randomize = randomize;
